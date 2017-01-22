@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+# Usage: $0 <mail draft file> <signature file> <rest of args are parts of editor command>
+
+INPUT_FILE="$1"
+shift
+SIGNATURE_FILE="$1"
+shift
+
+TMP_FILE=$(mktemp)
+
+# Put signature at the top
+echo -e "\n--  " >> $TMP_FILE
+cat $SIGNATURE_FILE >> $TMP_FILE || true
+
+# Append two spaces to header lines to let markdown insert line breaks
+echo -e "\n-----Original Message-----  " >> $TMP_FILE
+HEADER_LINES_NO=$(egrep -n '^$' $INPUT_FILE | head -n1 | tr -d :)
+head -n  $((HEADER_LINES_NO - 1)) $INPUT_FILE | sed 's/$/  /' >> $TMP_FILE
+
+# Append original email body
+tail -n +$HEADER_LINES_NO $INPUT_FILE >> $TMP_FILE
+
+cat $TMP_FILE > $INPUT_FILE
+rm $TMP_FILE
+
+# Start original editor
+"$@" $INPUT_FILE

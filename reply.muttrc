@@ -1,0 +1,49 @@
+# Reply in HTML
+
+# To reply to HTML email, press "v" when viewing it, and select a text/html entry.
+# Press <esc>h, and edit your reply on the top, the enterprise way.
+# When you're done with editing your reply and you have left your editor,
+# press <esc>h and your reply will be formatted into HTML.
+# Used macros change some settings, restore previous values by <esc>j.
+
+macro attach <esc>h \
+"<enter-command>"\
+";set my_signature=\$signature"\
+";unset signature"\
+";set my_indent_string=\$indent_string"\
+";unset indent_string"\
+";set my_header=\$header"\
+";set header"\
+";set my_attribution=\$attribution"\
+";unset attribution"\
+";set my_wait_key=\$wait_key"\
+";set wait_key=no"\
+";set my_editor=\$editor"\
+";set editor=\"~/.mutt/html/reply_editor_wrapper '%s' \$my_signature \$my_editor\""\
+";unauto_view text/html"\
+"<Return>"\
+"<group-reply>"\
+ \
+"Initiate group-reply in HTML"
+
+macro compose <esc>h \
+"<edit-type><kill-line>text/html; charset=utf-8<Return>"\
+"<filter-entry>markdown_py || Markdown.pl<Return>y"\
+"<enter-command>"\
+";auto_view text/html"\
+"<Return>"\
+ \
+"Transform prepared markdown-formatted reply to HTML"
+
+macro attach,compose,index,pager <esc>j \
+"<enter-command>"\
+";set signature=\$my_signature"\
+";set indent_string=\$my_indent_string"\
+";set header=\$my_header"\
+";set attribution=\$my_attribution"\
+";set wait_key=\$my_wait_key"\
+";set editor=\$my_editor"\
+";auto_view text/html"\
+"<Return>"\
+ \
+"Restore settings changed by HTML replying macros"
