@@ -27,7 +27,7 @@ macro attach <esc>h \
 "Initiate group-reply in HTML"
 
 macro compose <esc>h \
-"<edit-type><kill-line>text/html; charset=utf-8<Return>"\
+"<edit-type><kill-line>text/html; charset=utf-8<Return><Return><Return><exit>"\
 "<filter-entry>markdown_py || Markdown.pl<Return>y"\
 "<enter-command>"\
 ";auto_view text/html"\
